@@ -15,6 +15,7 @@ def search(request):
         'query': query,
         'products': products
     }
+
     return render(request, 'store/search.html', context)
 
 
