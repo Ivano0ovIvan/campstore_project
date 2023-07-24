@@ -1,0 +1,55 @@
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 15px ;
+    background-color: cadetblue;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+}
+
+.left-links {
+    display: flex;
+    align-items: center;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+}
+
+.right-links {
+    margin-right: 40px;
+    display: flex;
+    align-items: center;
+}
+
+nav li {
+    padding: 0 20px;
+    display: inline-block;
+}
+
+nav li a {
+    color: white;
+    text-decoration: none;
+}
+
+ul li {
+    display: inline-block;
+}
+
+ul li a:hover {
+    background-color: #f2f2f2;
+}
+
+ul li a.active {
+    background-color: #333; /* Change this to your preferred active background color */
+    color: #fff; /* Change this to your preferred active text color */
+}
+
+.logo {
+    padding: 10px;
+}
+
