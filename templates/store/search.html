@@ -1,0 +1,13 @@
+{% extends 'base/base.html'%}
+
+{% block title %}Search{% endblock %}
+
+{% block content %}
+    <h1>Search</h1>
+    <h2>Search results for {{ query }}:</h2>
+    {% if products %}
+        {% include 'store/products.html' %}
+    {% else %}
+        <h2>No products found</h2>
+    {% endif %}
+{% endblock %}
