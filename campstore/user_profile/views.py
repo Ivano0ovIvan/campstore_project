@@ -3,11 +3,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import views as auth_views
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse_lazy
 from django.views import generic as views
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-from campstore.store.forms import ProductForm
-from campstore.store.models import Product, Category
+from .forms import UserProfileForm
+from campstore.store.forms import ProductForm, CategoryForm
+from campstore.store.models import Product, OrderItem, Order, Category
 from campstore.user_profile.models import UserProfileModel
 
 
@@ -34,7 +37,8 @@ def sign_up_view(request):
             user = form.save()
 
             login(request, user)
-            userprofile = UserProfileModel.objects.create(user=user)
+
+            UserProfileModel.objects.create(user=user)
 
             return redirect('frontpage')
 
@@ -58,16 +62,35 @@ class LogoutUserView(auth_views.LogoutView):
 
 @login_required
 def my_account(request):
-    return render(request, 'user_profile/my_account.html')
+    user_profile = request.user.userprofile
+    is_seller = user_profile.is_seller
+    context = {
+        'user_profile': user_profile,
+        'is_seller': is_seller,
+    }
+    return render(request, 'user_profile/my_account.html', context)
 
 
 @login_required
 def my_store(request):
     products = request.user.products.exclude(status=Product.DELETED)
+    order_items = OrderItem.objects.filter(product__user=request.user)
+    categories = Category.objects.all()
     context = {
-        'products': products
+        'products': products,
+        'order_items': order_items,
+        'categories': categories
     }
     return render(request, 'user_profile/my_store.html', context)
+
+
+@login_required
+def my_store_order_details(request, pk):
+    order = get_object_or_404(Order, pk=pk)
+    context = {
+        'order': order
+    }
+    return render(request, 'user_profile/my_store_order_detail.html', context)
 
 
 @login_required
@@ -125,3 +148,72 @@ def delete_product(request, pk):
     messages.success(request, 'The product was deleted!')
 
     return redirect('my-store')
+
+
+class AddCategoryView(LoginRequiredMixin, views.CreateView):
+    model = Category
+    template_name = 'user_profile/add_category.html'
+    form_class = CategoryForm
+    success_url = reverse_lazy('my-store')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Add category'
+
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Category added successfully!')
+        return super().form_valid(form)
+
+
+class EditCategoryView(LoginRequiredMixin, views.UpdateView):
+    model = Category
+    template_name = 'user_profile/add_category.html'
+    form_class = CategoryForm
+    success_url = reverse_lazy('my-store')
+
+    def get_object(self, queryset=None):
+        slug = self.kwargs.get('slug')
+        return get_object_or_404(Category, slug=slug)
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Category edited successfully!')
+        return super().form_valid(form)
+
+
+class DeleteCategoryView(LoginRequiredMixin, views.DeleteView):
+    model = Category
+    template_name = 'user_profile/delete_category.html'
+    success_url = reverse_lazy('my-store')
+
+    def get_object(self, queryset=None):
+        slug = self.kwargs.get('slug')
+        return get_object_or_404(Category, slug=slug)
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, 'Category deleted successfully!')
+        return super().delete(request, *args, **kwargs)
+
+
+class UserProfileUpdateView(LoginRequiredMixin, views.UpdateView):
+    model = UserProfileModel
+    form_class = UserProfileForm
+    template_name = 'user_profile/edit_profile.html'
+    success_url = reverse_lazy('my-account')
+
+    def get_object(self, queryset=None):
+        return self.request.user.userprofile
+
+    def get_initial(self):
+        initial = super().get_initial()
+        user_profile = self.request.user.userprofile
+        initial['first_name'] = user_profile.first_name
+        initial['last_name'] = user_profile.last_name
+        initial['profile_picture'] = user_profile.profile_picture
+        initial['address'] = user_profile.address
+        initial['post_code'] = user_profile.post_code
+        initial['phone_number'] = user_profile.phone_number
+        initial['is_seller'] = user_profile.is_seller
+
+        return initial

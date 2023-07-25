@@ -1,0 +1,51 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Edit profile{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Edit profile</h5>
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="{{ form.first_name.id_for_label }}">First Name</label>
+                                {{ form.first_name }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.last_name.id_for_label }}">Last Name</label>
+                                {{ form.last_name }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.profile_picture.id_for_label }}">Profile Picture</label>
+                                {{ form.profile_picture }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.address.id_for_label }}">Address</label>
+                                {{ form.address }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.post_code.id_for_label }}">Post Code</label>
+                                {{ form.post_code }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.phone_number.id_for_label }}">Phone Number</label>
+                                {{ form.phone_number }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.is_seller.id_for_label }}">Are you seller?</label>
+                                {{ form.is_seller }}
+                            </div>
+                            <button type="submit" class="btn btn-primary">Edit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+

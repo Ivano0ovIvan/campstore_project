@@ -3,16 +3,6 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-{#    <h1>{{ title }}</h1>#}
-{##}
-{#    <form method="post" action="." enctype="multipart/form-data">#}
-{#        {% csrf_token %}#}
-{#        {{ form.as_p }}#}
-{#    <button>Submit</button>#}
-{#    </form>#}
-{#    {% if product %}#}
-{#        <a href="{% url 'delete-product' product.id %}">Delete product</a>#}
-{#    {% endif %}#}
 <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
@@ -44,7 +34,9 @@
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
         {% if product %}
-            <a href="{% url 'delete-product' product.id %}">Delete product</a>
+            <a href="{% url 'delete-product' product.id %}">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </a>
         {% endif %}
 
                     </div>

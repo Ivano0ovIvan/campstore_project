@@ -7,7 +7,7 @@ from PIL import Image
 
 
 class Category(models.Model):
-    title = models.CharField(max_length=40)
+    title = models.CharField(max_length=40, unique=True)
     slug = models.SlugField(
         max_length=40,
         unique=True,
@@ -133,3 +133,6 @@ class OrderItem(models.Model):
     product = models.ForeignKey(Product, related_name='items', on_delete=models.CASCADE)
     price = models.IntegerField()
     quantity = models.IntegerField(default=1)
+
+    def get_order_price(self):
+        return f'{self.price:.2f}'

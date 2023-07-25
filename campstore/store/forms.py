@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product, Order
+from .models import Product, Order, Category
 
 
 class OrderForm(forms.ModelForm):
@@ -30,3 +30,9 @@ class ProductForm(forms.ModelForm):
                 'placeholder': 'Price'
             }),
         }
+
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ('title',)

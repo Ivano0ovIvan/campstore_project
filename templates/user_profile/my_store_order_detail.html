@@ -1,0 +1,39 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Order detail - {{ order.id }}{% endblock %}
+
+{% block content %}
+    <h1>Order detail - {{ order.id }}</h1>
+    <h2>My products in this order:</h2>
+    <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-3">
+                    <strong>Title</strong>
+                </div>
+                <div class="col-md-3">
+                    <strong>Quantity</strong>
+                </div>
+                <div class="col-md-3">
+                    <strong>Price</strong>
+                </div>
+            </div>
+        </div>
+    {% for item in order.items.all %}
+        {% if item.product.user == request.user %}
+            <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-3">
+                    {{ item.product.title }}
+                </div>
+                <div class="col-md-3">
+                    {{ item.quantity }}
+                </div>
+                <div class="col-md-3">
+                    ${{ item.get_order_price }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+
+{% endblock %}
