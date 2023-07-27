@@ -18,6 +18,10 @@ class UserProfileModel(models.Model):
         blank=True,
         null=True
     )
+    email = models.EmailField(
+        blank=True,
+        null=True
+    )
     profile_picture = models.URLField(
         blank=True,
         null=True

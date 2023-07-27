@@ -1,11 +1,11 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-  <h2>Confirm Deletion</h2>
-  <p>Are you sure you want to delete the category "{{ object.title }}"?</p>
-  <form method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Delete</button>
-    <a href="{% url 'frontpage' %}">Cancel</a>
-  </form>
+    <h2>Confirm Deletion</h2>
+    <p>Are you sure you want to delete the category "{{ object.title }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a href="{% url 'frontpage' %}">Cancel</a>
+    </form>
 {% endblock %}

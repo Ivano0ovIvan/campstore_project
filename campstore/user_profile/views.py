@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic as views
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.templatetags.static import static
 from .forms import UserProfileForm
 from campstore.store.forms import ProductForm, CategoryForm
 from campstore.store.models import Product, OrderItem, Order, Category
@@ -62,7 +62,8 @@ class LogoutUserView(auth_views.LogoutView):
 
 @login_required
 def my_account(request):
-    user_profile = request.user.userprofile
+    user_profile, created = UserProfileModel.objects.get_or_create(user=request.user)
+
     is_seller = user_profile.is_seller
     context = {
         'user_profile': user_profile,
@@ -201,19 +202,24 @@ class UserProfileUpdateView(LoginRequiredMixin, views.UpdateView):
     form_class = UserProfileForm
     template_name = 'user_profile/edit_profile.html'
     success_url = reverse_lazy('my-account')
+    profile_picture = static('images/person.png')
+
+    def get_profile_picture(self):
+        if self.object.profile_picture is not None:
+            return self.object.profile_picture
+
+        return self.profile_picture
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['profile_picture'] = self.get_profile_picture()
+
+        return context
 
     def get_object(self, queryset=None):
         return self.request.user.userprofile
 
-    def get_initial(self):
-        initial = super().get_initial()
-        user_profile = self.request.user.userprofile
-        initial['first_name'] = user_profile.first_name
-        initial['last_name'] = user_profile.last_name
-        initial['profile_picture'] = user_profile.profile_picture
-        initial['address'] = user_profile.address
-        initial['post_code'] = user_profile.post_code
-        initial['phone_number'] = user_profile.phone_number
-        initial['is_seller'] = user_profile.is_seller
-
-        return initial
+    def get_form(self, *args, **kwargs):
+        form = super().get_form(*args, **kwargs)
+        form.instance.user = self.request.user
+        return form

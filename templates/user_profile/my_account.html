@@ -1,30 +1,39 @@
 {% extends 'base/base.html' %}
-
+{% load static %}
 {% block title %}{% firstof user.get_full_name user.username %}{% endblock %}
 
 {% block content %}
     <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card mt-5">
-                <img src="{{ user_profile.image.url }}" class="card-img-top" alt="Profile Picture">
-                <div class="card-body">
-                    <h5 class="card-title">{{ user_profile.user.first_name }} {{ user_profile.user.last_name }}</h5>
-                    <p class="card-text">
-                        Address: {{ user_profile.address }}<br>
-                        Post Code: {{ user_profile.post_code }}<br>
-                        Phone Number: {{ user_profile.phone_number }}<br>
-                        {% if is_seller %}
-                            <strong>Seller</strong>
-                        {% else %}
-                            <strong>Customer</strong>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card mt-5">
+                    {% if user_profile.profile_picture %}
+                    <img src="{{ user_profile.profile_picture }}" class="card-img-top"
+                         alt="{{ user_profile.user.username }}`s image">
+                    {% else %}
+                        <img src="{% static 'images/person.png' %}" class="card-img-top"
+                         alt="{{ user_profile.user.username }}`s image">
+                    {% endif %}
+                    <div class="card-body">
+                        {% if user_profile.first_name and user_profile.last_name %}
+                        <h5 class="card-title">{{ user_profile.first_name }} {{ user_profile.last_name }}</h5>
                         {% endif %}
-                    </p>
-                    <a class="btn btn-primary mb-3" href="{% url 'edit-profile' request.user.id %}">Edit</a>
-                    <a class="btn btn-danger" href="{% url 'logout' %}">Log Out</a>
+                        <p class="card-text">
+                            Address: {{ user_profile.address }}<br>
+                            Email: {{ user_profile.email }}<br>
+                            Post Code: {{ user_profile.post_code }}<br>
+                            Phone Number: {{ user_profile.phone_number }}<br>
+                            {% if is_seller %}
+                                <strong>Seller</strong>
+                            {% else %}
+                                <strong>Customer</strong>
+                            {% endif %}
+                        </p>
+                        <a class="btn btn-primary mb-3" href="{% url 'edit-profile' request.user.id %}">Edit</a>
+                        <a class="btn btn-danger" href="{% url 'logout' %}">Log Out</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}

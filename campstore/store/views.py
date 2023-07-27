@@ -5,6 +5,7 @@ from django.views import generic as views
 from .models import Product, Category, Order, OrderItem
 from .forms import OrderForm
 from .cart import Cart
+from ..user_profile.models import UserProfileModel
 
 
 def search(request):

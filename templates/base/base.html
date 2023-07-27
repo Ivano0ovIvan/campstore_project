@@ -4,8 +4,8 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/navigation.css' %}">
@@ -15,34 +15,33 @@
     <title>{% block title %}{% endblock %} | CampStore</title>
 </head>
 <body>
-    {% include 'base/navigation.html' %}
+{% include 'base/navigation.html' %}
 <main>
-{{ request.user }}
     {% block content %}
     {% endblock %}
 </main>
-    {% include 'base/footer.html' %}
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>$.noConflict();</script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <script>
-        function adjustFooterPosition() {
-            const footer = document.querySelector('.footer');
-            const mainContent = document.querySelector('main');
+{% include 'base/footer.html' %}
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>$.noConflict();</script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script>
+    function adjustFooterPosition() {
+        const footer = document.querySelector('.footer');
+        const mainContent = document.querySelector('main');
 
-            if (mainContent.offsetHeight < window.innerHeight) {
-                footer.style.position = 'fixed';
-                footer.style.bottom = '0';
-                footer.style.width = '100%';
-            } else {
-                footer.style.position = 'static';
-            }
+        if (mainContent.offsetHeight < window.innerHeight) {
+            footer.style.position = 'fixed';
+            footer.style.bottom = '0';
+            footer.style.width = '100%';
+        } else {
+            footer.style.position = 'static';
         }
+    }
 
-        document.addEventListener('DOMContentLoaded', adjustFooterPosition);
-        window.addEventListener('resize', adjustFooterPosition);
-    </script>
+    document.addEventListener('DOMContentLoaded', adjustFooterPosition);
+    window.addEventListener('resize', adjustFooterPosition);
+</script>
 </body>
 </html>

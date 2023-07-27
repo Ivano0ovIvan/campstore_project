@@ -8,55 +8,55 @@
     {% if messages %}
         {% for message in messages %}
             <div>
-            {{ message }}
+                {{ message }}
             </div>
         {% endfor %}
     {% endif %}
 
-        <h2 class="mt-5">My orders:</h2>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-3">
-                    <strong>Order ID</strong>
-                </div>
-                <div class="col-md-3">
-                    <strong>Title</strong>
-                </div>
-                <div class="col-md-3">
-                    <strong>Quantity</strong>
-                </div>
-                <div class="col-md-3">
-                    <strong>Price</strong>
-                </div>
+    <h2 class="mt-5">My orders:</h2>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <strong>Order ID</strong>
+            </div>
+            <div class="col-md-3">
+                <strong>Title</strong>
+            </div>
+            <div class="col-md-3">
+                <strong>Quantity</strong>
+            </div>
+            <div class="col-md-3">
+                <strong>Price</strong>
             </div>
         </div>
-        {% if order_items %}
+    </div>
+    {% if order_items %}
         {% for order_item in order_items %}
-           <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-3">
-                    <a href="{% url 'my-store-order-details' order_item.order.id %}">{{ order_item.order.id }}</a>
-                </div>
-                <div class="col-md-3">
-                    {{ order_item.product.title }}
-                </div>
-                <div class="col-md-3">
-                    {{ order_item.quantity }}
-                </div>
-                <div class="col-md-3">
-                    ${{ order_item.get_order_price }}
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-3">
+                        <a href="{% url 'my-store-order-details' order_item.order.id %}">{{ order_item.order.id }}</a>
+                    </div>
+                    <div class="col-md-3">
+                        {{ order_item.product.title }}
+                    </div>
+                    <div class="col-md-3">
+                        {{ order_item.quantity }}
+                    </div>
+                    <div class="col-md-3">
+                        ${{ order_item.get_order_price }}
+                    </div>
                 </div>
             </div>
-        </div>
         {% endfor %}
-        {% else %}
-            <p>Sorry, you don`t have any orders yet!</p>
-        {% endif %}
+    {% else %}
+        <p>Sorry, you don`t have any orders yet!</p>
+    {% endif %}
     <hr>
 
     <a class="btn btn-primary mb-3" href="{% url 'add-product' %}">Add Product</a>
     {% if request.user.is_superuser %}
-    <a class="btn btn-primary mb-3" href="{% url 'add-category' %}">Add Category</a>
+        <a class="btn btn-primary mb-3" href="{% url 'add-category' %}">Add Category</a>
     {% endif %}
     <h2 class="mt-5">My categories:</h2>
     {% if categories %}
@@ -74,7 +74,7 @@
             <div class="product">
                 <a href="{% url 'edit-product' product.id %}">
                     {% if product.image %}
-                        <img src="{{ product.image.url }}" alt="Image of {{ product.title }}" />
+                        <img src="{{ product.image.url }}" alt="Image of {{ product.title }}"/>
                     {% endif %}
                     <h3>{{ product.title }}</h3>
                     <p>${{ product.get_display_price }}</p>

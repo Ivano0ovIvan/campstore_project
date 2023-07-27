@@ -8,7 +8,7 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Edit profile</h5>
+                        <h5 class="card-title">Edit {{ request.user }}`s profile</h5>
                         <form method="post" enctype="multipart/form-data">
                             {% csrf_token %}
                             <div class="form-group">
@@ -18,6 +18,10 @@
                             <div class="form-group">
                                 <label for="{{ form.last_name.id_for_label }}">Last Name</label>
                                 {{ form.last_name }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.email.id_for_label }}">Email</label>
+                                {{ form.email }}
                             </div>
                             <div class="form-group">
                                 <label for="{{ form.profile_picture.id_for_label }}">Profile Picture</label>

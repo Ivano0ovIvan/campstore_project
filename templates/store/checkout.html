@@ -1,4 +1,4 @@
-{% extends 'base/base.html'%}
+{% extends 'base/base.html' %}
 
 {% block title %}Checkout{% endblock %}
 
@@ -8,40 +8,35 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
-                            <h2 class="text-xl-start">Total cost: ${{ cart.get_total_cost }}</h2>
+                        <h2 class="text-xl-start">Total cost: ${{ cart.get_total_cost }}</h2>
 
-                            <form method="post" action=".">
+                        <form method="post" action=".">
                             {% csrf_token %}
-                                <div class="form-group">
-                                        <label for="{{ form.first_name.id_for_label }}">First Name</label>
-                                        {{ form.first_name }}
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="{{ form.last_name.id_for_label }}">Last Name</label>
-                                        {{ form.last_name }}
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="{{ form.address.id_for_label }}">Address</label>
-                                        {{ form.address }}
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="{{ form.zipcode.id_for_label }}">Zipcode</label>
-                                        {{ form.zipcode }}
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="{{ form.city.id_for_label }}">City</label>
-                                        {{ form.city }}
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="{{ form.phone_number.id_for_label }}">Phone Number</label>
-                                        {{ form.phone_number }}
-                                    </div>
-                                    <button href="{% url 'checkout' %}" type="submit" class="btn btn-primary">Checkout</button>
-                        {#    <button href="{% url 'checkout' %}" class="d-inline-block  p-2 rounded-3 bg-danger text-white">Checkout</button>#}
-                            </form>
+                            <div class="form-group">
+                                <label for="{{ form.first_name.id_for_label }}">First Name</label>
+                                {{ form.first_name }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.last_name.id_for_label }}">Last Name</label>
+                                {{ form.last_name }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.address.id_for_label }}">Address for delivery</label>
+                                {{ form.address }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.post_code.id_for_label }}">Post code</label>
+                                {{ form.post_code }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.phone_number.id_for_label }}">Phone Number</label>
+                                {{ form.phone_number }}
+                            </div>
+                            <button href="{% url 'checkout' %}" type="submit" class="btn btn-primary">Checkout</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
 {% endblock %}
