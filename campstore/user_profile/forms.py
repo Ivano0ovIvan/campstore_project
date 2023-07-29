@@ -15,6 +15,4 @@ class UserProfileForm(forms.ModelForm):
             'phone_number',
             'is_seller'
         ]
-        widgets = {
-            'profile_picture': forms.URLInput()
-        }
+

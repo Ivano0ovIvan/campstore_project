@@ -11,3 +11,5 @@ urlpatterns = [
     path('', include('campstore.core.urls')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+handler404 = 'campstore.core.views.page_not_found'

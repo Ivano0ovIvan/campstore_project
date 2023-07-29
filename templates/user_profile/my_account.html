@@ -8,8 +8,8 @@
             <div class="col-md-6">
                 <div class="card mt-5">
                     {% if user_profile.profile_picture %}
-                    <img src="{{ user_profile.profile_picture }}" class="card-img-top"
-                         alt="{{ user_profile.user.username }}`s image">
+                    <img src="{{ user_profile.profile_picture.url }}" class="card-img-top"
+                         alt="{% static 'images/person.png' %}">
                     {% else %}
                         <img src="{% static 'images/person.png' %}" class="card-img-top"
                          alt="{{ user_profile.user.username }}`s image">

@@ -26,13 +26,13 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    DRAFT = 'draft'
-    WAITING_APPROVAL = 'waitingapproval'
+    SOLD_OUT = 'sold_out'
+    WAITING_APPROVAL = 'waiting_approval'
     ACTIVE = 'active'
     DELETED = 'deleted'
 
     STATUS_CHOICES = (
-        (DRAFT, 'Draft'),
+        (SOLD_OUT, 'Sold out'),
         (WAITING_APPROVAL, 'Waiting approval'),
         (ACTIVE, 'Active'),
         (DELETED, 'Deleted')
@@ -62,6 +62,7 @@ class Product(models.Model):
         blank=True,
         null=True
     )
+    quantity = models.IntegerField(default=1)
     thumbnail = models.ImageField(
         upload_to='uploads/product_images/thumbnail/',
         blank=True,

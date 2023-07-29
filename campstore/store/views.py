@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic as views
@@ -68,8 +69,16 @@ def checkout_view(request):
 
             for item in cart:
                 product = item['product']
-                total_price += product.price * int(item['quantity'])
-
+                quantity = int(item['quantity'])
+                total_price += product.price * quantity
+                if quantity > product.quantity:
+                    messages.error(request,
+                                   f"Sorry, there are only {product.quantity} units available for '{product.title}'.")
+                    return redirect('checkout')
+                else:
+                    if quantity == product.quantity:
+                        product.status = product.status = Product.SOLD_OUT
+                        product.save()
             order = form.save(commit=False)
             order.created_by = request.user
             order.paid_amount = total_price
@@ -94,7 +103,8 @@ def checkout_view(request):
 
     context = {
         'cart': cart,
-        'form': form
+        'form': form,
+        'messages': messages.get_messages(request)
     }
     return render(request, 'store/checkout.html', context)
 

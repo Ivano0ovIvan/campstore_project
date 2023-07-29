@@ -5,9 +5,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-vznbpnfdbvlmc)ht*faf7e%z=yxzaviccnmcm%1@t_j!r^@4zp'
 
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 CART_SESSION_ID = 'cart'
 SESSION_COOKIE_AGE = 86400

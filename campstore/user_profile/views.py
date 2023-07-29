@@ -9,7 +9,7 @@ from django.views import generic as views
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.templatetags.static import static
 from .forms import UserProfileForm
-from campstore.store.forms import ProductForm, CategoryForm
+from campstore.store.forms import ProductCreateForm, CategoryForm, ProductEditForm
 from campstore.store.models import Product, OrderItem, Order, Category
 from campstore.user_profile.models import UserProfileModel
 
@@ -97,7 +97,7 @@ def my_store_order_details(request, pk):
 @login_required
 def add_product(request):
     if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES)
+        form = ProductCreateForm(request.POST, request.FILES)
 
         if form.is_valid():
             product = form.save(commit=False)
@@ -108,7 +108,7 @@ def add_product(request):
 
             return redirect('my-store')
     else:
-        form = ProductForm()
+        form = ProductCreateForm()
 
     context = {
         'form': form,
@@ -121,7 +121,7 @@ def add_product(request):
 def edit_product(request, pk):
     product = Product.objects.filter(user=request.user).get(pk=pk)
     if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES, instance=product)
+        form = ProductEditForm(request.POST, request.FILES, instance=product)
 
         if form.is_valid():
             form.save()
@@ -130,7 +130,7 @@ def edit_product(request, pk):
 
             return redirect('my-store')
     else:
-        form = ProductForm(instance=product)
+        form = ProductCreateForm(instance=product)
 
     context = {
         'form': form,
