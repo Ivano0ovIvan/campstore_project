@@ -34,7 +34,7 @@ class CategoryModelAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductModelAdmin(admin.ModelAdmin):
-    list_display = ("category", "user", "title", "description", "price", "image", "quantity", "status")
+    list_display = ("category", "user", "title", "description", "price", "main_image", "quantity", "status")
     search_fields = ("category", "user", "title", "status")
     list_filter = (StatusFilter,)
     ordering = ("category", "title",)

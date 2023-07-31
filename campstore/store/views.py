@@ -2,11 +2,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views import generic as views
 from .models import Product, Category, Order, OrderItem
 from .forms import OrderForm
 from .cart import Cart
-from ..user_profile.models import UserProfileModel
 
 
 def search(request):

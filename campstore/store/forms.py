@@ -12,7 +12,7 @@ class OrderForm(forms.ModelForm):
 class ProductCreateForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ('category', 'title', 'description', 'price', 'image', 'quantity')
+        fields = ('category', 'title', 'description', 'price', 'main_image', 'quantity')
         widgets = {
             'category': forms.Select(attrs={
                 'style': 'max-width: 300px',
@@ -40,7 +40,7 @@ class ProductCreateForm(forms.ModelForm):
 class ProductEditForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ('category', 'title', 'description', 'price', 'image', 'quantity')
+        fields = ('category', 'title', 'description', 'price', 'main_image', 'quantity')
         widgets = {
             'category': forms.Select(attrs={
                 'style': 'max-width: 300px',

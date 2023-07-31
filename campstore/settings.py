@@ -24,7 +24,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'campstore.core',
     'campstore.user_profile',
-    'campstore.store'
+    'campstore.store',
 
 ]
 
