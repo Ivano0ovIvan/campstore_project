@@ -15,6 +15,7 @@
                                 <label for="{{ form.title.id_for_label }}">Category Title</label>
                                 {{ form.title }}
                             </div>
+                            <div class="text-danger">{{ form.errors }}</div>
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>
                         {% if category %}

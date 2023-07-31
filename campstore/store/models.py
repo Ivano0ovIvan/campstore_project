@@ -5,6 +5,9 @@ from django.core.files import File
 from io import BytesIO
 from PIL import Image
 
+from campstore.store.validators import validate_positive_number, validate_name, validate_name_length, \
+    validate_phone_number
+
 
 class Category(models.Model):
     title = models.CharField(max_length=40, unique=True)
@@ -49,20 +52,22 @@ class Product(models.Model):
         on_delete=models.CASCADE,
     )
 
-    title = models.CharField(max_length=40)
+    title = models.CharField(
+        max_length=50,
+        validators=[validate_name, validate_name_length])
     slug = models.SlugField(
         max_length=40,
         unique=True,
         blank=True
     )
     description = models.TextField(blank=True)
-    price = models.IntegerField()
+    price = models.IntegerField(validators=[validate_positive_number])
     image = models.ImageField(
         upload_to='uploads/product_images/',
         blank=True,
         null=True
     )
-    quantity = models.IntegerField(default=1)
+    quantity = models.IntegerField(default=1, validators=[validate_positive_number])
     thumbnail = models.ImageField(
         upload_to='uploads/product_images/thumbnail/',
         blank=True,
@@ -111,11 +116,11 @@ class Product(models.Model):
 
 
 class Order(models.Model):
-    first_name = models.CharField(max_length=200)
-    last_name = models.CharField(max_length=200)
+    first_name = models.CharField(validators = [validate_name, validate_name_length],max_length=50)
+    last_name = models.CharField(validators = [validate_name, validate_name_length],max_length=50)
     address = models.CharField(max_length=200)
     post_code = models.CharField(max_length=200)
-    phone_number = models.IntegerField()
+    phone_number = models.CharField(validators=[validate_phone_number],max_length=15)
     paid_amount = models.IntegerField(blank=True, null=True)
     is_paid = models.BooleanField(default=False)
     seller_id = models.CharField(max_length=200)
@@ -132,7 +137,7 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, related_name='items', on_delete=models.CASCADE)
     price = models.IntegerField()
-    quantity = models.IntegerField(default=1)
+    quantity = models.IntegerField(default=1, validators=[validate_positive_number])
 
     def get_order_price(self):
         return f'{self.price:.2f}'

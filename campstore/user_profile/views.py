@@ -121,7 +121,7 @@ def add_product(request):
 def edit_product(request, pk):
     product = Product.objects.filter(user=request.user).get(pk=pk)
     if request.method == 'POST':
-        form = ProductEditForm(request.POST, request.FILES, instance=product)
+        form = ProductCreateForm(request.POST, request.FILES, instance=product)
 
         if form.is_valid():
             form.save()

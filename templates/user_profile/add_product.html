@@ -9,7 +9,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">{{ title }}</h5>
-                        <form method="post" action="." enctype="multipart/form-data">
+                        <form method="post" action="{% if product %}{% url 'edit-product' product.id %}{% else %}.{% endif %}" enctype="multipart/form-data">
                             {% csrf_token %}
                             <div class="form-group">
                                 <label for="{{ form.category.id_for_label }}">Category</label>
@@ -24,13 +24,20 @@
                                 {{ form.description }}
                             </div>
                             <div class="form-group">
-                                <label for="{{ form.price.id_for_label }}">Price</label>
+                                <label for="{{ form.quantity.id_for_label }}">Quantity</label>
+                                {{ form.quantity }}
+
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.price.id_for_label }}">Price $</label>
                                 {{ form.price }}
                             </div>
                             <div class="form-group">
                                 <label for="{{ form.image.id_for_label }}">Image</label>
                                 {{ form.image }}
                             </div>
+
+                            <div class="text-danger">{{ form.errors }}</div>
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>
                         {% if product %}

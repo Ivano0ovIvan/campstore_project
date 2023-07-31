@@ -55,7 +55,7 @@
     <hr>
 
     <a class="btn btn-primary mb-3" href="{% url 'add-product' %}">Add Product</a>
-    {% if request.user.is_superuser %}
+    {% if request.user.is_staff %}
         <a class="btn btn-primary mb-3" href="{% url 'add-category' %}">Add Category</a>
     {% endif %}
     <h2 class="mt-5">My categories:</h2>
