@@ -3,17 +3,51 @@
 {% block title %}{{ product.title }}{% endblock %}
 
 {% block content %}
-    {% if product.image %}
-        <img src="{{ product.image.url }}" alt="Image of {{ product.title }}"/>
-    {% endif %}
-    <h1>{{ product.title }}</h1>
-    <p>{{ product.get_display_price }}</p>
-    <p>
-        Seller:
-        <a href="{% url 'seller-details' product.user.id %}">{% firstof product.user.get_full_name product.user.username %}</a>
-    </p>
-    {% if product.description %}
-        <p>{{ product.description }}</p>
-    {% endif %}
-    <a href="{% url 'add-to-cart' product.id %}">Add to cart</a>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="Image of {{ product.title }}" class="img-fluid mb-3"/>
+                {% endif %}
+                <h1>{{ product.title }}</h1>
+                <p>{{ product.get_display_price }}</p>
+                <p>
+                    Seller:
+                    <a href="{% url 'seller-details' product.user.id %}">{% firstof product.user.get_full_name product.user.username %}</a>
+                </p>
+                {% if product.description %}
+                    <p>{{ product.description }}</p>
+                {% endif %}
+
+                <a href="{% url 'add-to-cart' product.id %}" class="btn btn-primary">Add to cart</a>
+            </div>
+            <div class="col-md-6">
+                {% if product.images.all %}
+                    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            {% for image in product.images.all %}
+                                <div class="carousel-item{% if forloop.first %} active{% endif %}">
+                                    <img src="{{ image.image.url }}" class="d-block w-100"
+                                         alt="Image {{ forloop.counter }}">
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+                                data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+                                data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+
+                {% else %}
+                    <p>No additional images available for this product.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 {% endblock %}

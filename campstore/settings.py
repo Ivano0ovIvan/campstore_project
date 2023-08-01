@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'campstore.core',
     'campstore.user_profile',
     'campstore.store',
+    'multiupload',
 
 ]
 

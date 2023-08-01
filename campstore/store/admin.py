@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, Order, OrderItem
+from .models import Category, Product, Order, OrderItem, ProductImage
 
 
 class StatusFilter(admin.SimpleListFilter):
@@ -43,6 +43,11 @@ class ProductModelAdmin(admin.ModelAdmin):
             'fields': ('title', 'description', 'price'),
         }),
     )
+
+
+@admin.register(ProductImage)
+class ProductImageAdmin(admin.ModelAdmin):
+    pass
 
 
 @admin.register(Order)

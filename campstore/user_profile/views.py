@@ -10,7 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.templatetags.static import static
 from .forms import UserProfileForm
 from campstore.store.forms import ProductCreateForm, CategoryForm, ProductEditForm
-from campstore.store.models import Product, OrderItem, Order, Category
+from campstore.store.models import Product, OrderItem, Order, Category, ProductImage
 from campstore.user_profile.models import UserProfileModel
 
 
@@ -103,6 +103,10 @@ def add_product(request):
             product = form.save(commit=False)
             product.user = request.user
             product.save()
+
+            images = request.FILES.getlist('image')
+            for image in images:
+                ProductImage.objects.create(product=product, image=image)
 
             messages.success(request, 'The product was added successfully!')
 

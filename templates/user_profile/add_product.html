@@ -33,8 +33,12 @@
                                 {{ form.price }}
                             </div>
                             <div class="form-group">
-                                <label for="{{ form.main_image.id_for_label }}">Image</label>
+                                <label for="{{ form.main_image.id_for_label }}">Cover image</label>
                                 {{ form.main_image }}
+                            </div>
+                            <div class="form-group">
+                                <label for="id_images">Images</label>
+                                <input type="file" name="images" id="id_images" multiple>
                             </div>
 
                             <div class="text-danger">{{ form.errors }}</div>

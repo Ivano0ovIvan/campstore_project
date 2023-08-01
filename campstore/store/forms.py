@@ -1,6 +1,6 @@
 from django import forms
 from .models import Product, Order, Category
-from .validators import validate_positive_number
+from multiupload.fields import MultiFileField
 
 
 class OrderForm(forms.ModelForm):
@@ -10,6 +10,12 @@ class OrderForm(forms.ModelForm):
 
 
 class ProductCreateForm(forms.ModelForm):
+    images = MultiFileField(min_num=1,
+                            max_num=10,
+                            max_file_size=1024*1024*5,
+                            required=False
+                            )
+
     class Meta:
         model = Product
         fields = ('category', 'title', 'description', 'price', 'main_image', 'quantity')

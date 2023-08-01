@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.crypto import get_random_string
 from django.utils.text import slugify
 from django.core.files import File
 from io import BytesIO
@@ -26,6 +27,15 @@ class Category(models.Model):
 
     def __str__(self):
         return self.title
+
+
+def create_unique_slug(instance, new_slug=None):
+    slug = new_slug or slugify(instance.title)
+    if Product.objects.filter(slug=slug).exists():
+        random_string = get_random_string(length=4)
+        slug = f"{slug}-{random_string}"
+        return create_unique_slug(instance, new_slug=slug)
+    return slug
 
 
 class Product(models.Model):
@@ -67,6 +77,11 @@ class Product(models.Model):
         blank=True,
         null=True
     )
+    images = models.ManyToManyField(
+        'ProductImage',
+        blank=True,
+        related_name='products_related',
+    )
     quantity = models.IntegerField(default=1, validators=[validate_positive_number])
     thumbnail = models.ImageField(
         upload_to='uploads/product_images/thumbnail/',
@@ -81,7 +96,7 @@ class Product(models.Model):
         ordering = ('-created_at',)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.title)
+        self.slug = create_unique_slug(self)
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -94,8 +109,8 @@ class Product(models.Model):
         if self.thumbnail:
             return self.thumbnail.url
         else:
-            if self.image:
-                self.thumbnail = self.make_thumbnail(self.image)
+            if self.main_image:
+                self.thumbnail = self.make_thumbnail(self.main_image)
                 self.save()
 
                 return self.thumbnail.url
@@ -104,6 +119,8 @@ class Product(models.Model):
 
     def make_thumbnail(self, image, size=(300, 300)):
         img = Image.open(image)
+        if img.mode == 'P':
+            img = img.convert('RGB')
         img.convert('RGB')
         img.thumbnail(size)
 
@@ -116,8 +133,15 @@ class Product(models.Model):
 
 
 class ProductImage(models.Model):
-    product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='uploads/product_images/')
+    product = models.ForeignKey(Product,
+                                on_delete=models.CASCADE,
+                                related_name='images_related'
+                                )
+    image = models.ImageField(
+        upload_to='uploads/product_images/',
+        blank=True,
+        null=True
+    )
 
     def __str__(self):
         return f"Image for {self.product.title}"
