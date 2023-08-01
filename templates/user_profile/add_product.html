@@ -9,7 +9,9 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">{{ title }}</h5>
-                        <form method="post" action="{% if product %}{% url 'edit-product' product.id %}{% else %}.{% endif %}" enctype="multipart/form-data">
+                        <form method="post"
+                              action="{% if product %}{% url 'edit-product' product.id %}{% else %}.{% endif %}"
+                              enctype="multipart/form-data">
                             {% csrf_token %}
                             <div class="form-group">
                                 <label for="{{ form.category.id_for_label }}">Category</label>
@@ -37,8 +39,10 @@
                                 {{ form.main_image }}
                             </div>
                             <div class="form-group">
-                                <label for="id_images">Images</label>
-                                <input type="file" name="images" id="id_images" multiple>
+                                {{ formset.management_form }}
+                                {% for form in formset %}
+                                    {{ form }}
+                                {% endfor %}
                             </div>
 
                             <div class="text-danger">{{ form.errors }}</div>

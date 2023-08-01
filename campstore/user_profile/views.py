@@ -12,6 +12,7 @@ from .forms import UserProfileForm
 from campstore.store.forms import ProductCreateForm, CategoryForm, ProductEditForm
 from campstore.store.models import Product, OrderItem, Order, Category, ProductImage
 from campstore.user_profile.models import UserProfileModel
+from django.forms import modelformset_factory
 
 
 UserModel = get_user_model()
@@ -96,30 +97,35 @@ def my_store_order_details(request, pk):
 
 @login_required
 def add_product(request):
+    ImageFormSet = modelformset_factory(ProductImage, fields=('image',), extra=5, max_num=5)
+
     if request.method == 'POST':
         form = ProductCreateForm(request.POST, request.FILES)
+        formset = ImageFormSet(request.POST, request.FILES, queryset=ProductImage.objects.none())
 
-        if form.is_valid():
+        if form.is_valid() and formset.is_valid():
             product = form.save(commit=False)
             product.user = request.user
             product.save()
 
-            images = request.FILES.getlist('image')
-            for image in images:
-                ProductImage.objects.create(product=product, image=image)
+            for form in formset.cleaned_data:
+                if form:
+                    image = form['image']
+                    ProductImage.objects.create(product=product, image=image)
 
             messages.success(request, 'The product was added successfully!')
 
             return redirect('my-store')
     else:
         form = ProductCreateForm()
+        formset = ImageFormSet(queryset=ProductImage.objects.none())
 
     context = {
         'form': form,
-        'title': 'Add product'
+        'formset': formset,
+        'title': 'Add product',
     }
     return render(request, 'user_profile/add_product.html', context)
-
 
 @login_required
 def edit_product(request, pk):

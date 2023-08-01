@@ -31,8 +31,10 @@ def category_details(request, slug):
 
 def product_details(request, category_slug, slug):
     product = get_object_or_404(Product, slug=slug, status=Product.ACTIVE)
+    images = product.images_related.all()
     context = {
-        'product': product
+        'product': product,
+        'images': images,
     }
 
     return render(request, 'store/product_details.html', context)
