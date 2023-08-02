@@ -44,6 +44,11 @@ class ProductCreateForm(forms.ModelForm):
 
 
 class ProductEditForm(forms.ModelForm):
+    images = MultiFileField(min_num=1,
+                            max_num=10,
+                            max_file_size=1024 * 1024 * 5,
+                            required=False
+                            )
     class Meta:
         model = Product
         fields = ('category', 'title', 'description', 'price', 'main_image', 'quantity')

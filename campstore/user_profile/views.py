@@ -87,6 +87,15 @@ def my_store(request):
 
 
 @login_required
+def seller_dashboard(request):
+    seller_orders = OrderItem.objects.filter(product__user=request.user)
+    context = {
+        'seller_orders': seller_orders,
+    }
+    return render(request, 'store/seller_dashboard.html', context)
+
+
+@login_required
 def my_store_order_details(request, pk):
     order = get_object_or_404(Order, pk=pk)
     context = {
@@ -97,11 +106,11 @@ def my_store_order_details(request, pk):
 
 @login_required
 def add_product(request):
-    ImageFormSet = modelformset_factory(ProductImage, fields=('image',), extra=5, max_num=5)
+    image_form_set = modelformset_factory(ProductImage, fields=('image',), extra=5, max_num=5)
 
     if request.method == 'POST':
         form = ProductCreateForm(request.POST, request.FILES)
-        formset = ImageFormSet(request.POST, request.FILES, queryset=ProductImage.objects.none())
+        formset = image_form_set(request.POST, request.FILES, queryset=ProductImage.objects.none())
 
         if form.is_valid() and formset.is_valid():
             product = form.save(commit=False)
@@ -118,7 +127,7 @@ def add_product(request):
             return redirect('my-store')
     else:
         form = ProductCreateForm()
-        formset = ImageFormSet(queryset=ProductImage.objects.none())
+        formset = image_form_set(queryset=ProductImage.objects.none())
 
     context = {
         'form': form,
@@ -127,24 +136,33 @@ def add_product(request):
     }
     return render(request, 'user_profile/add_product.html', context)
 
+
 @login_required
 def edit_product(request, pk):
+    image_form_set = modelformset_factory(ProductImage, fields=('image',), extra=5, max_num=5)
     product = Product.objects.filter(user=request.user).get(pk=pk)
     if request.method == 'POST':
         form = ProductCreateForm(request.POST, request.FILES, instance=product)
-
+        formset = image_form_set(request.POST, request.FILES, queryset=ProductImage.objects.none())
         if form.is_valid():
             form.save()
+
+            for form in formset.cleaned_data:
+                if form:
+                    image = form['image']
+                    ProductImage.objects.create(product=product, image=image)
 
             messages.success(request, 'Changes were made!')
 
             return redirect('my-store')
     else:
         form = ProductCreateForm(instance=product)
+        formset = image_form_set(queryset=ProductImage.objects.none())
 
     context = {
         'form': form,
         'title': 'Edit product',
+        'formset': formset,
         'product': product
     }
     return render(request, 'user_profile/add_product.html', context)

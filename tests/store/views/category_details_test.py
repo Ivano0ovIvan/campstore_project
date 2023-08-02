@@ -1,4 +1,4 @@
-from tests.core.views.base_test import BaseTestCase
+from tests.store.views.base_test import BaseTestCase
 from django.urls import reverse
 
 from campstore.store.models import Category

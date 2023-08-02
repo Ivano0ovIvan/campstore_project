@@ -109,6 +109,22 @@ def checkout_view(request):
     return render(request, 'store/checkout.html', context)
 
 
+@login_required
+def change_product_status(request, product_id):
+    if request.method == 'POST':
+        new_status = request.POST.get('status')
+        product = get_object_or_404(Product, id=product_id)
+
+        if new_status in [status for status, _ in Product.STATUS_CHOICES]:
+            product.status = new_status
+            product.save()
+            messages.success(request, f"Product '{product.title}' status has been updated to '{product.get_status_display()}'.")
+        else:
+            messages.error(request, "Invalid status value.")
+
+    return redirect('seller-dashboard')
+
+
 def change_quantity(request, product_id):
     action = request.GET.get('action', '')
 

@@ -71,7 +71,7 @@ class Product(models.Model):
         blank=True
     )
     description = models.TextField(blank=True)
-    price = models.IntegerField(validators=[validate_positive_number])
+    price = models.FloatField(validators=[validate_positive_number])
     main_image = models.ImageField(
         upload_to='uploads/product_images/',
         blank=True,

@@ -1,0 +1,65 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Seller Dashboard{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1>My orders:</h1>
+
+        {% if seller_orders %}
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer Name</th>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Total Price</th>
+                    <th>Address for Delivery</th>
+                    <th>Post Code</th>
+                    <th>Phone Number</th>
+                    <th>Created At</th>
+                    <th>Status</th>
+                    <th>Change Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for order_item in seller_orders %}
+                    <tr>
+                        <td>{{ order_item.order.id }}</td>
+                        <td>{{ order_item.order.first_name }} {{ order_item.order.last_name }}</td>
+                        <td>{{ order_item.product.title }}</td>
+                        <td>{{ order_item.quantity }}</td>
+                        <td>${{ order_item.price }}</td>
+                        <td>{{ order_item.order.address }}</td>
+                        <td>{{ order_item.order.post_code }}</td>
+                        <td>{{ order_item.order.phone_number }}</td>
+                        <td>{{ order_item.order.created_at }}</td>
+                        <td>
+                            {{ order_item.product.get_status_display }}
+                        </td>
+                        <td>
+                            <form method="post" action="{% url 'change-product-status' order_item.product.id %}">
+                                {% csrf_token %}
+                                <div class="input-group">
+                                    <select name="status" id="id_status" class="form-select">
+                                        {% for value, display_name in order_item.product.STATUS_CHOICES %}
+                                            <option value="{{ value }}"
+                                                    {% if order_item.product.status == value %}selected{% endif %}>
+                                                {{ display_name }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit" class="btn btn-primary">Change</button>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No orders for your products yet.</p>
+        {% endif %}
+    </div>
+{% endblock %}

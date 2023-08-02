@@ -16,6 +16,7 @@ urlpatterns = [
     ])),
     path('my-store/', include([
         path('', views.my_store, name='my-store'),
+        path('dashboard/', views.seller_dashboard, name='seller-dashboard'),
         path('order-detail/<int:pk>/', views.my_store_order_details, name='my-store-order-details'),
         path('add-product/', views.add_product, name='add-product'),
         path('edit-product/<int:pk>/', views.edit_product, name='edit-product'),
