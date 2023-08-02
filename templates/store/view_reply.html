@@ -1,0 +1,31 @@
+<!-- store/view_reply.html -->
+{% extends 'base/base.html' %}
+
+{% block title %}View Reply - {{ message.subject }}{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1>{{ message.subject }}</h1>
+        <div class="card mb-4">
+            <div class="card-body">
+                <p>{{ message.message }}</p>
+            </div>
+        </div>
+
+        {% if message.has_replies %}
+            <h2>Replies:</h2>
+            {% for reply in message.replies.all %}
+                <div class="card mb-3">
+                    <div class="card-header">
+                        {{ reply.sender.username }} - {{ reply.timestamp }}
+                    </div>
+                    <div class="card-body">
+                        <p>{{ reply.reply_message }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No replies yet.</p>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -8,10 +8,10 @@ from django.urls import reverse_lazy
 from django.views import generic as views
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.templatetags.static import static
-from .forms import UserProfileForm
+from .forms import UserProfileForm, ContactForm, SellerReplyForm
 from campstore.store.forms import ProductCreateForm, CategoryForm, ProductEditForm
 from campstore.store.models import Product, OrderItem, Order, Category, ProductImage
-from campstore.user_profile.models import UserProfileModel
+from campstore.user_profile.models import UserProfileModel, ContactMessage, SellerReply
 from django.forms import modelformset_factory
 
 
@@ -233,3 +233,76 @@ class UserProfileUpdateView(LoginRequiredMixin, views.UpdateView):
         form = super().get_form(*args, **kwargs)
         form.instance.user = self.request.user
         return form
+
+
+@login_required
+def contact_seller(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    seller = product.user
+
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.sender = request.user
+            message.receiver = seller
+            message.product = product
+            message.save()
+            messages.success(request, 'Your message has been sent to the seller.')
+            return redirect('product-details', category_slug=product.category.slug, slug=product.slug)
+    else:
+        form = ContactForm()
+
+    context = {
+        'form': form,
+        'product': product,
+        'seller': seller,
+    }
+    return render(request, 'store/contact_seller.html', context)
+
+
+@login_required
+def seller_messages(request):
+    messages_received = ContactMessage.objects.filter(receiver=request.user).order_by('-timestamp')
+
+    context = {
+        'messages_received': messages_received,
+    }
+    return render(request, 'store/seller_messages.html', context)
+
+
+@login_required
+def reply_to_sender(request, message_id):
+    message = get_object_or_404(ContactMessage, pk=message_id)
+    if request.method == 'POST':
+        form = SellerReplyForm(request.POST)
+        if form.is_valid():
+            reply_message = form.cleaned_data['reply_message']
+            reply = SellerReply.objects.create(message=message, sender=request.user, reply_message=reply_message)
+            return redirect('seller-messages')
+    else:
+        form = SellerReplyForm()
+
+    context = {
+        'message': message,
+        'form': form,
+    }
+    return render(request, 'store/reply_to_sender.html', context)
+
+
+@login_required
+def view_reply(request, message_id):
+    message = get_object_or_404(ContactMessage, pk=message_id)
+    context = {
+        'message': message,
+    }
+    return render(request, 'store/view_reply.html', context)
+
+
+@login_required
+def sent_messages(request):
+    sent_messages = ContactMessage.objects.filter(sender=request.user)
+    context = {
+        'sent_messages': sent_messages,
+    }
+    return render(request, 'store/sent_messages.html', context)

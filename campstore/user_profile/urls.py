@@ -5,6 +5,11 @@ urlpatterns = [
     path('signup/', views.sign_up_view, name='signup'),
     path('login/', views.LoginUserView.as_view(), name='login'),
     path('logout/', views.LogoutUserView.as_view(), name='logout'),
+    path('contact-seller/<int:product_id>/', views.contact_seller, name='contact-seller'),
+    path('seller-messages/', views.seller_messages, name='seller-messages'),
+    path('seller-messages/<int:message_id>/reply/', views.reply_to_sender, name='reply-to-sender'),
+    path('sent-messages/', views.sent_messages, name='sent-messages'),
+    path('view-reply/<int:message_id>/', views.view_reply, name='view-reply'),
     path('my-account/', include([
         path('', views.my_account, name='my-account'),
         path('edit-profile/<int:pk>/', views.UserProfileUpdateView.as_view(), name='edit-profile'),

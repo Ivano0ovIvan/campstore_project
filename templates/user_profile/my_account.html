@@ -29,6 +29,10 @@
                                 <strong>Customer</strong>
                             {% endif %}
                         </p>
+                        {% if request.user.userprofile.is_seller %}
+                        <a class="btn btn-primary mb-3" href="{% url 'seller-messages'  %}">Messages</a>
+                        {% endif %}
+                        <a class="btn btn-primary mb-3" href="{% url 'sent-messages'  %}">Sent messages</a>
                         <a class="btn btn-primary mb-3" href="{% url 'edit-profile' request.user.id %}">Edit</a>
                         <a class="btn btn-danger" href="{% url 'logout' %}">Log Out</a>
                     </div>

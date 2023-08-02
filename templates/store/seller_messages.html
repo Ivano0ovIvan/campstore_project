@@ -1,0 +1,31 @@
+
+{% extends 'base/base.html' %}
+
+{% block title %}My Messages{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1>My Messages</h1>
+        {% if messages_received %}
+            <ul class="list-group">
+                {% for message in messages_received %}
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <strong>From: {{ message.sender.username }}</strong><br>
+                                <strong>Subject: {{ message.subject }}</strong><br>
+                                <p>{{ message.message }}</p>
+                                <small>Sent on: {{ message.timestamp }}</small>
+                            </div>
+                            <div>
+                                <a href="{% url 'reply-to-sender' message.id %}" class="btn btn-primary">Reply</a>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>You have no messages yet.</p>
+        {% endif %}
+    </div>
+{% endblock %}

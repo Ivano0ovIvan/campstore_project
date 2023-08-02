@@ -1,5 +1,5 @@
 from django import forms
-from .models import UserProfileModel
+from .models import UserProfileModel, ContactMessage
 
 
 class UserProfileForm(forms.ModelForm):
@@ -16,3 +16,12 @@ class UserProfileForm(forms.ModelForm):
             'is_seller'
         ]
 
+
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = ContactMessage
+        fields = ['subject', 'message']
+
+
+class SellerReplyForm(forms.Form):
+    reply_message = forms.CharField(widget=forms.Textarea(attrs={'rows': 4}))

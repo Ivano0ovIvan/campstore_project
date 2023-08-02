@@ -20,6 +20,7 @@
                 {% endif %}
                 <p>{{ product.created_at }}</p>
                 <a href="{% url 'add-to-cart' product.id %}" class="btn btn-primary">Add to cart</a>
+                <a href="{% url 'contact-seller' product.id %}" class="btn btn-primary">Contact with seller</a>
             </div>
             <div class="col-md-6">
                 {% if images %}

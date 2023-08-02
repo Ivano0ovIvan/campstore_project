@@ -1,0 +1,19 @@
+
+{% extends 'base/base.html' %}
+
+{% block title %}Sent Messages{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1>Sent Messages</h1>
+        <ul class="list-group">
+            {% for message in sent_messages %}
+                <li class="list-group-item">
+                    <a href="{% url 'view-reply' message.id %}">{{ message.subject }}</a> - {{ message.timestamp }}
+                </li>
+            {% endfor %}
+        </ul>
+        <br>
+        <a href="{% url 'my-account' %}" class="btn btn-secondary">Back to Profile</a>
+    </div>
+{% endblock %}
