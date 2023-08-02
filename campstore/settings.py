@@ -22,11 +22,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'campstore.core',
     'campstore.user_profile',
     'campstore.store',
     'multiupload',
-
 ]
 
 MIDDLEWARE = [
