@@ -9,7 +9,7 @@ from django.views import generic as views
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.templatetags.static import static
 from .forms import UserProfileForm, ContactForm, SellerReplyForm
-from campstore.store.forms import ProductCreateForm, CategoryForm, ProductEditForm
+from campstore.store.forms import ProductCreateForm, CategoryForm
 from campstore.store.models import Product, OrderItem, Order, Category, ProductImage
 from campstore.user_profile.models import UserProfileModel, ContactMessage, SellerReply
 from django.forms import modelformset_factory
@@ -52,8 +52,12 @@ def sign_up_view(request):
     return render(request, 'user_profile/sign_up.html', context)
 
 
-class LoginUserView(auth_views.LoginView):
+class CustomLoginUserView(auth_views.LoginView):
     template_name = 'user_profile/log_in.html'
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Invalid username or password. Please try again.')
+        return super().form_invalid(form)
 
 
 class LogoutUserView(auth_views.LogoutView):
