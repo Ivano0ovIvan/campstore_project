@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import views as auth_views
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import generic as views
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.templatetags.static import static
@@ -36,13 +36,12 @@ def sign_up_view(request):
 
         if form.is_valid():
             user = form.save()
-
             login(request, user)
-
             UserProfileModel.objects.create(user=user)
 
-            return redirect('frontpage')
+            profile = user.userprofile
 
+            return redirect(reverse('edit-profile', kwargs={'pk': profile.pk}))
     else:
         form = UserCreationForm()
 
@@ -144,20 +143,16 @@ def edit_product(request, pk):
     if request.method == 'POST':
         form = ProductCreateForm(request.POST, request.FILES, instance=product)
         formset = image_form_set(request.POST, request.FILES, queryset=ProductImage.objects.none())
-        if form.is_valid():
+        if form.is_valid() and formset.is_valid():
             form.save()
-
-            for form in formset.cleaned_data:
-                if form:
-                    image = form['image']
-                    ProductImage.objects.create(product=product, image=image)
+            formset.save()
 
             messages.success(request, 'Changes were made!')
 
             return redirect('my-store')
     else:
         form = ProductCreateForm(instance=product)
-        formset = image_form_set(queryset=ProductImage.objects.none())
+        formset = image_form_set(queryset=ProductImage.objects.filter(product=product))
 
     context = {
         'form': form,

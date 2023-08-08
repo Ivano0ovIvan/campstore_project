@@ -9,12 +9,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-CART_SESSION_ID = 'cart'
-SESSION_COOKIE_AGE = 86400
-LOGIN_URL = 'login'
-LOGOUT_REDIRECT_URL = 'frontpage'
-LOGIN_REDIRECT_URL = 'frontpage'
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -28,6 +22,17 @@ INSTALLED_APPS = [
     'campstore.store',
     'multiupload',
 ]
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "campstore_db",
+        "USER": "ivan-ivanov",
+        "PASSWORD": "t6300tt84",
+        "HOST": "127.0.0.1",
+        "PORT": "5432",
+    }
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -62,17 +67,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'campstore.wsgi.application'
 
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "campstore_db",
-        "USER": "ivan-ivanov",
-        "PASSWORD": "t6300tt84",
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
-    }
-}
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -106,6 +100,11 @@ STATICFILES_DIRS = [
 ]
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media/'
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CART_SESSION_ID = 'cart'
+SESSION_COOKIE_AGE = 86400
+LOGIN_URL = 'login'
+LOGOUT_REDIRECT_URL = 'frontpage'
+LOGIN_REDIRECT_URL = 'frontpage'
 
