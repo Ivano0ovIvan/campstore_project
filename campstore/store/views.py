@@ -4,6 +4,8 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.decorators.cache import never_cache
+
 from .models import Product, Category, Order, OrderItem
 from .forms import OrderForm
 from .cart import Cart
@@ -31,10 +33,14 @@ def category_details(request, slug):
     }
     return render(request, 'store/category_details.html', context)
 
-
+@never_cache
 def product_details(request, category_slug, slug):
     product = get_object_or_404(Product, slug=slug, status=Product.ACTIVE)
     images = product.images_related.all()
+
+    product.view_count += 1
+    product.save()
+
     context = {
         'product': product,
         'images': images,

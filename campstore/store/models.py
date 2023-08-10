@@ -93,6 +93,7 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default=ACTIVE)
+    view_count = models.PositiveIntegerField(default=0)
 
     class Meta:
         ordering = ('-created_at',)
