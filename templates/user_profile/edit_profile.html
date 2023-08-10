@@ -44,7 +44,9 @@
                                 {{ form.is_seller }}
                             </div>
                             <div class="text-danger">{{ form.errors }}</div>
-                            <button type="submit" class="btn btn-primary">Edit</button>
+                            <a class="btn btn-primary mb-3" href="{% url 'change-password' %}">Change password</a>
+                            <hr>
+                            <button type="submit" class="btn btn-danger">Edit</button>
                         </form>
                     </div>
                 </div>

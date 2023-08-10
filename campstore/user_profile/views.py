@@ -1,4 +1,4 @@
-from django.contrib.auth import login, get_user_model
+from django.contrib.auth import login, get_user_model, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import views as auth_views
@@ -8,11 +8,15 @@ from django.urls import reverse_lazy, reverse
 from django.views import generic as views
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.templatetags.static import static
+from django.views.decorators.cache import never_cache
+
 from .forms import UserProfileForm, ContactForm, SellerReplyForm
 from campstore.store.forms import ProductCreateForm, CategoryForm
 from campstore.store.models import Product, OrderItem, Order, Category, ProductImage
 from campstore.user_profile.models import UserProfileModel, ContactMessage, SellerReply
 from django.forms import modelformset_factory
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib import messages
 
 
 UserModel = get_user_model()
@@ -250,6 +254,25 @@ class UserProfileUpdateView(LoginRequiredMixin, views.UpdateView):
         form = super().get_form(*args, **kwargs)
         form.instance.user = self.request.user
         return form
+
+
+def change_password_view(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('my-account')
+        else:
+            print(form.errors)
+    else:
+        form = PasswordChangeForm(user=request.user)
+
+    context = {'form': form}
+
+    return render(request, 'user_profile/change_password.html', context)
+
 
 
 @login_required

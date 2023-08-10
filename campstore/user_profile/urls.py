@@ -13,6 +13,7 @@ urlpatterns = [
     path('my-account/', include([
         path('', views.my_account, name='my-account'),
         path('edit-profile/<int:pk>/', views.UserProfileUpdateView.as_view(), name='edit-profile'),
+        path('change-password/', views.change_password_view, name='change-password'),
     ])),
     path('my-store/', include([
         path('', views.my_store, name='my-store'),
