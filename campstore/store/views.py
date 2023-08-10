@@ -1,10 +1,13 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.mail import send_mail
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Product, Category, Order, OrderItem
 from .forms import OrderForm
 from .cart import Cart
+from .. import settings
 
 
 def search(request):
@@ -60,6 +63,7 @@ def cart_details_view(request):
 @login_required
 def checkout_view(request):
     cart = Cart(request)
+    User = get_user_model()
 
     user = request.user
     initial_data = {
@@ -75,7 +79,6 @@ def checkout_view(request):
 
         if form.is_valid():
             total_price = 0
-
             for item in cart:
                 product = item['product']
                 quantity = int(item['quantity'])
@@ -85,26 +88,35 @@ def checkout_view(request):
                                    f"Sorry, there are only {product.quantity} units available for '{product.title}'.")
                     return redirect('checkout')
                 else:
-                    if quantity == product.quantity:
-                        product.status = product.status = Product.SOLD_OUT
-                        product.save()
+                    product.quantity -= quantity
+                    if product.quantity == 0:
+                        product.status = Product.WAITING_APPROVAL
+                    product.save()
             order = form.save(commit=False)
             order.created_by = request.user
             order.paid_amount = total_price
             order.save()
             for item in cart:
+
                 product = item['product']
                 quantity = int(item['quantity'])
                 price = product.price * quantity
-
-                item = OrderItem.objects.create(
+                order_item = OrderItem.objects.create(
                     order=order,
                     product=product,
                     price=price,
                     quantity=quantity,
                 )
 
-                cart.clear()
+                associated_product = order_item.product
+                seller = associated_product.user.userprofile
+                subject = 'New Purchase Notification'
+                message = f'Hello {associated_product.user.username},\n\nYou have a new purchase for {associated_product.title}.\n\nOrder ID: {order.id}'
+                from_email = settings.EMAIL_HOST_USER
+                recipient_list = [seller.email]
+                send_mail(subject, message, from_email, recipient_list)
+
+            cart.clear()
 
             messages.success(request, 'Your order has been sent for processing. Wait for confirmation from the seller!')
 

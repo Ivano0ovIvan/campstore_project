@@ -1,3 +1,4 @@
+from django.core.mail import send_mail
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.crypto import get_random_string
@@ -6,6 +7,7 @@ from django.core.files import File
 from io import BytesIO
 from PIL import Image
 
+from campstore import settings
 from campstore.store.validators import validate_positive_number, validate_name, validate_name_length, \
     validate_phone_number
 
