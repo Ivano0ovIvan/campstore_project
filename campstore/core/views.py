@@ -7,7 +7,7 @@ class ProductListView(views.ListView):
     template_name = 'core/frontpage.html'
     model = Product
     context_object_name = 'products'
-    paginate_by = 12
+    paginate_by = 6
 
     def get_queryset(self):
         queryset = Product.objects.filter(status=Product.ACTIVE)

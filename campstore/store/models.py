@@ -64,7 +64,7 @@ class Product(models.Model):
 
     title = models.CharField(
         max_length=50,
-        validators=[validate_name, validate_name_length])
+        validators=[validate_name_length])
     slug = models.SlugField(
         max_length=40,
         unique=True,

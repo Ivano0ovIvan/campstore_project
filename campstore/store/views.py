@@ -61,6 +61,15 @@ def cart_details_view(request):
 def checkout_view(request):
     cart = Cart(request)
 
+    user = request.user
+    initial_data = {
+        'first_name': user.userprofile.first_name,
+        'last_name': user.userprofile.last_name,
+        'address': user.userprofile.address,
+        'post_code': user.userprofile.post_code,
+        'phone_number': user.userprofile.phone_number,
+    }
+
     if request.method == 'POST':
         form = OrderForm(request.POST)
 
@@ -97,9 +106,11 @@ def checkout_view(request):
 
                 cart.clear()
 
+            messages.success(request, 'Your order has been sent for processing. Wait for confirmation from the seller!')
+
             return redirect('my-account')
     else:
-        form = OrderForm()
+        form = OrderForm(initial=initial_data)
 
     context = {
         'cart': cart,

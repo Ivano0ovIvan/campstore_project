@@ -10,7 +10,7 @@
                     <img src="{{ product.image.url }}" alt="Image of {{ product.title }}" class="img-fluid mb-3"/>
                 {% endif %}
                 <h1>{{ product.title }}</h1>
-                <p>{{ product.get_display_price }}</p>
+                <p>${{ product.get_display_price }}</p>
                 <p>
                     Seller:
                     <a href="{% url 'seller-details' product.user.id %}">{% firstof product.user.get_full_name product.user.username %}</a>
